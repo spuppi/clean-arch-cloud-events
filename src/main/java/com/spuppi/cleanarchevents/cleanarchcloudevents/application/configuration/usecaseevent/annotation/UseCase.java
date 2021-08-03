@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 public @interface UseCase {
 
     String name() default "";
-    String eventRequest() default "";
+    String eventType() default "";
 }

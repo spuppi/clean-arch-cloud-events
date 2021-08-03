@@ -7,8 +7,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class EfetuarAverbacaoEventRequest {
+public class EfetuarAverbacaoRequest{
 
+    private String transactionId;
     private String nome;
     private String cpf;
     private Byte tipoContrato;

@@ -9,8 +9,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class EfetuarAverbacaoEventResponse {
+public class EfetuarAverbacaoResponse {
 
+    private String transactionId;
     private Cliente cliente;
     private Contrato contrato;
 }

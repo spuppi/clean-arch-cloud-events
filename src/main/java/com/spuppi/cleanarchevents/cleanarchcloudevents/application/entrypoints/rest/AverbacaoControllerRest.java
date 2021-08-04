@@ -2,10 +2,10 @@ package com.spuppi.cleanarchevents.cleanarchcloudevents.application.entrypoints.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spuppi.cleanarchevents.cleanarchcloudevents.application.configuration.usecaseevent.UseCaseEvent;
 import com.spuppi.cleanarchevents.cleanarchcloudevents.application.configuration.usecaseevent.annotation.UseCase;
-import com.spuppi.cleanarchevents.cleanarchcloudevents.contracts.usecases.ucefetuaraverbacao.EfetuarAverbacaoRequest;
-import com.spuppi.cleanarchevents.cleanarchcloudevents.contracts.usecases.ucefetuaraverbacao.EfetuarAverbacaoResponse;
+import com.spuppi.cleanarchevents.cleanarchcloudevents.application.configuration.usecaseevent.enums.EventStatus;
+import com.spuppi.cleanarchevents.cleanarchcloudevents.application.configuration.usecaseevent.model.UseCaseEvent;
+import com.spuppi.cleanarchevents.cleanarchcloudevents.contracts.usecases.ucefetuaraverbacao.EfetuarAverbacaoEventRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -35,19 +35,20 @@ public class AverbacaoControllerRest {
             @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
     })
     @RequestMapping(value = "/averbacao", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<EfetuarAverbacaoResponse> efetuarAverbacao(
+    public ResponseEntity<UseCaseEvent> efetuarAverbacao(
             @RequestHeader String usecase,
-            @RequestBody EfetuarAverbacaoRequest requestEvent) {
+            @RequestBody EfetuarAverbacaoEventRequest requestEvent) {
 
-        System.out.println("Requeste recebido");
-        System.out.println(requestEvent);
         System.out.println("Gerar evento");
 
+        UseCaseEvent event = UseCaseEvent.builder()
+                .payload(requestEvent)
+                .build();
+
         eventPublisher.publishEvent(requestEvent);
+        event.setStatus(EventStatus.CREATED);
 
-        EfetuarAverbacaoResponse response = EfetuarAverbacaoResponse.builder().build();
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(event);
     }
 
     @ApiOperation(value = "Efetuar uma averbacao json")
@@ -57,19 +58,20 @@ public class AverbacaoControllerRest {
             @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
     })
     @RequestMapping(value = "/averbacaojson", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<EfetuarAverbacaoResponse> efetuarAverbacaoJson(
+    public ResponseEntity<UseCaseEvent> efetuarAverbacaoJson(
             @RequestHeader String usecase,
             @RequestBody String jsonRequestEvent) throws JsonProcessingException {
 
-        System.out.println("Requeste recebido");
-        System.out.println(jsonRequestEvent);
         System.out.println("Gerar evento");
 
-        eventPublisher.publishEvent(objectMapper.readValue(jsonRequestEvent, EfetuarAverbacaoRequest.class));
+        UseCaseEvent event = UseCaseEvent.builder()
+                .payload(jsonRequestEvent)
+                .build();
 
-        EfetuarAverbacaoResponse response = EfetuarAverbacaoResponse.builder().build();
+        eventPublisher.publishEvent(objectMapper.readValue(jsonRequestEvent, EfetuarAverbacaoEventRequest.class));
+        event.setStatus(EventStatus.CREATED);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(event);
     }
 
     @ApiOperation(value = "Efetuar uma averbacao json")
@@ -91,13 +93,18 @@ public class AverbacaoControllerRest {
         String useCase = null;
         Class<?> eventType = null;
 
-        UseCaseEvent event = UseCaseEvent.builder().build();
+        UseCaseEvent event = UseCaseEvent.builder()
+                .payload(jsonRequestEvent)
+                .build();
 
         for (BeanDefinition beanDef : provider.findCandidateComponents(scanPath)) {
             useCase = Class.forName(beanDef.getBeanClassName()).getAnnotation(UseCase.class).name();
             eventType = Class.forName(Class.forName(beanDef.getBeanClassName()).getAnnotation(UseCase.class).eventType());
             if (useCase.equalsIgnoreCase(usecase)) {
                 eventPublisher.publishEvent(objectMapper.readValue(jsonRequestEvent, eventType));
+                event.setStatus(EventStatus.CREATED);
+            }else{
+                event.setStatus(EventStatus.NOT_FOUND);
             }
             break;
         }

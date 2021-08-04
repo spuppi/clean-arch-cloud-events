@@ -5,5 +5,5 @@ import org.springframework.stereotype.Component;
 @Component
 public interface EfetuarAverbacaoPort {
 
-    void execute(EfetuarAverbacaoRequest request);
+    void execute(EfetuarAverbacaoEventRequest request);
 }

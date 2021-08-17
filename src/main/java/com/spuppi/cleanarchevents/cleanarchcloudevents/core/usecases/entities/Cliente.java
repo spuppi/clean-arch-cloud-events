@@ -1,4 +1,4 @@
-package com.spuppi.cleanarchevents.cleanarchcloudevents.usecases.entities;
+package com.spuppi.cleanarchevents.cleanarchcloudevents.core.usecases.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -4,10 +4,7 @@ import com.spuppi.cleanarchevents.cleanarchcloudevents.application.configuration
 import com.spuppi.cleanarchevents.cleanarchcloudevents.core.contracts.dataproviders.database.DatabaseClientePort;
 import com.spuppi.cleanarchevents.cleanarchcloudevents.core.contracts.usecases.ucefetuaraverbacao.EfetuarAverbacaoEventRequest;
 import com.spuppi.cleanarchevents.cleanarchcloudevents.core.contracts.usecases.ucefetuaraverbacao.EfetuarAverbacaoPort;
-import com.spuppi.cleanarchevents.cleanarchcloudevents.core.dataproviders.database.ClienteDb;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -20,8 +17,7 @@ import java.util.UUID;
 public class EfetuarAverbacaoImpl implements EfetuarAverbacaoPort{
 
     @Autowired
-    private ClienteDb clienteDb;
-//    private DatabaseClientePort clienteDb;
+    private DatabaseClientePort clienteDb;
 
     @Async
     @EventListener

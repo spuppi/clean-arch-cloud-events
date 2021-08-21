@@ -205,7 +205,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/simple-aws-lambda/api/1629568183646-2021-08-21T17:49:43.646Z/target/clean-arch-cloud-events-0.0.1-SNAPSHOT-aws.jar"
+                "S3Key": "serverless/simple-aws-lambda/api/1629568556059-2021-08-21T17:55:56.059Z/target/clean-arch-cloud-events-0.0.1-SNAPSHOT-aws.jar"
               },
               "Handler": "com.spuppi.cleanarchevents.cleanarchcloudevents.application.entrypoints.serverless.aws.UseCaseEventFunctionAdapterAws",
               "Runtime": "java11",
@@ -223,14 +223,14 @@
               "SpringadapterawsLogGroup"
             ]
           },
-          "SpringadapterawsLambdaVersionjCKmFX8EOxAHXjk1AayILOd6pasEZCwah7iv6a8Y": {
+          "SpringadapterawsLambdaVersionHGGc0wEQr7tz93WtSCkYGDHtwZ6yz1IIO4dNrqlRoc": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SpringadapterawsLambdaFunction"
               },
-              "CodeSha256": "SQWOKLwJxuHCNfM2XSBP4wCPIfrrv3jdHlkx/XCin3Y="
+              "CodeSha256": "Ond253fyQ7yf1AcsOOwUTZolW3k26zSwLUlqRJZXYzk="
             }
           },
           "ApiGatewayRestApi": {
@@ -306,7 +306,7 @@
               "SpringadapterawsLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1629568180287": {
+          "ApiGatewayDeployment1629568552661": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -368,7 +368,7 @@
           "SpringadapterawsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SpringadapterawsLambdaVersionjCKmFX8EOxAHXjk1AayILOd6pasEZCwah7iv6a8Y"
+              "Ref": "SpringadapterawsLambdaVersionHGGc0wEQr7tz93WtSCkYGDHtwZ6yz1IIO4dNrqlRoc"
             },
             "Export": {
               "Name": "sls-simple-aws-lambda-api-SpringadapterawsLambdaFunctionQualifiedArn"
@@ -508,7 +508,7 @@
         "timeout": 10,
         "runtime": "java11",
         "vpc": {},
-        "versionLogicalId": "SpringadapterawsLambdaVersionjCKmFX8EOxAHXjk1AayILOd6pasEZCwah7iv6a8Y"
+        "versionLogicalId": "SpringadapterawsLambdaVersionHGGc0wEQr7tz93WtSCkYGDHtwZ6yz1IIO4dNrqlRoc"
       }
     },
     "configValidationMode": "warn",
@@ -525,7 +525,7 @@
       },
       "package": {
         "artifact": "target/clean-arch-cloud-events-0.0.1-SNAPSHOT-aws.jar",
-        "artifactDirectoryName": "serverless/simple-aws-lambda/api/1629568183646-2021-08-21T17:49:43.646Z"
+        "artifactDirectoryName": "serverless/simple-aws-lambda/api/1629568556059-2021-08-21T17:55:56.059Z"
       },
       "functions": {
         "$ref": "$[\"service\"][\"functions\"]"
@@ -535,7 +535,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/simple-aws-lambda/api/1629568183646-2021-08-21T17:49:43.646Z",
+    "artifactDirectoryName": "serverless/simple-aws-lambda/api/1629568556059-2021-08-21T17:55:56.059Z",
     "artifact": "target/clean-arch-cloud-events-0.0.1-SNAPSHOT-aws.jar"
   }
 }

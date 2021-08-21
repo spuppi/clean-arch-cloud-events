@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import java.util.function.Consumer;
 
 @Component
-public interface EfetuarAverbacaoPort extends Consumer<EfetuarAverbacaoEventRequest> {
+public interface EfetuarAverbacaoPort{
 
-    void execute(EfetuarAverbacaoEventRequest efetuarAverbacaoEventRequest);
+    String execute(EfetuarAverbacaoEventRequest efetuarAverbacaoEventRequest);
 }

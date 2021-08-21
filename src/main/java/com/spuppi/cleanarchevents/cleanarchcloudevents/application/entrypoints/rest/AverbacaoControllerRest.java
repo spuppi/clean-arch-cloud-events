@@ -41,14 +41,13 @@ public class AverbacaoControllerRest {
 
         System.out.println("Gerar evento");
 
-        UseCaseEvent event = UseCaseEvent.builder()
-                .payload(requestEvent)
-                .build();
+        UseCaseEvent useCaseEvent = new UseCaseEvent();
+        useCaseEvent.setPayload(requestEvent);
 
         eventPublisher.publishEvent(requestEvent);
-        event.setStatus(EventStatus.CREATED);
+        useCaseEvent.setStatus(EventStatus.CREATED);
 
-        return ResponseEntity.ok(event);
+        return ResponseEntity.ok(useCaseEvent);
     }
 
     @ApiOperation(value = "Efetuar uma averbacao json")
@@ -64,14 +63,13 @@ public class AverbacaoControllerRest {
 
         System.out.println("Gerar evento");
 
-        UseCaseEvent event = UseCaseEvent.builder()
-                .payload(jsonRequestEvent)
-                .build();
+        UseCaseEvent useCaseEvent = new UseCaseEvent();
+        useCaseEvent.setPayload(jsonRequestEvent);
 
         eventPublisher.publishEvent(objectMapper.readValue(jsonRequestEvent, EfetuarAverbacaoEventRequest.class));
-        event.setStatus(EventStatus.CREATED);
+        useCaseEvent.setStatus(EventStatus.CREATED);
 
-        return ResponseEntity.ok(event);
+        return ResponseEntity.ok(useCaseEvent);
     }
 
     @ApiOperation(value = "Efetuar uma averbacao json")
@@ -93,22 +91,21 @@ public class AverbacaoControllerRest {
         String useCase = null;
         Class<?> eventType = null;
 
-        UseCaseEvent event = UseCaseEvent.builder()
-                .payload(jsonRequestEvent)
-                .build();
-
+        UseCaseEvent useCaseEvent = new UseCaseEvent();
+        useCaseEvent.setPayload(jsonRequestEvent);
+        
         for (BeanDefinition beanDef : provider.findCandidateComponents(scanPath)) {
             useCase = Class.forName(beanDef.getBeanClassName()).getAnnotation(UseCase.class).name();
             eventType = Class.forName(Class.forName(beanDef.getBeanClassName()).getAnnotation(UseCase.class).eventType());
             if (useCase.equalsIgnoreCase(usecase)) {
                 eventPublisher.publishEvent(objectMapper.readValue(jsonRequestEvent, eventType));
-                event.setStatus(EventStatus.CREATED);
+                useCaseEvent.setStatus(EventStatus.CREATED);
             }else{
-                event.setStatus(EventStatus.NOT_FOUND);
+                useCaseEvent.setStatus(EventStatus.NOT_FOUND);
             }
             break;
         }
 
-        return ResponseEntity.ok(event);
+        return ResponseEntity.ok(useCaseEvent);
     }
 }

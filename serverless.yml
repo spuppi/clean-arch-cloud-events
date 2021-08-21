@@ -1,0 +1,36 @@
+service: simple-aws-lambda
+
+provider:
+  name: aws
+  runtime: java11
+  profile: serverless-admin
+  stage: api
+  region: us-east-1
+  timeout: 10
+  memorySize: 512
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 's3:*'
+      Resource:
+        - 'arn:aws:s3:::${self:custom.myBucket}/*'
+        - !Join ['', ['arn:aws:s3:::', !Ref ServerlessDeploymentBucket, '/*']]
+  apiGateway:
+    shouldStartNameWithService: true
+
+custom:
+  myBucket: functions-lambda
+
+package:
+  artifact: target/clean-arch-cloud-events-0.0.1-SNAPSHOT-aws.jar
+
+functions:
+  springadapteraws:
+    handler: com.spuppi.cleanarchevents.cleanarchcloudevents.application.entrypoints.serverless.aws.UseCaseEventFunctionAdapterAws
+    events:
+      - http:
+          method: POST
+          path: /springadapteraws
+          request:
+            template:
+              application/json: $input.json('$')

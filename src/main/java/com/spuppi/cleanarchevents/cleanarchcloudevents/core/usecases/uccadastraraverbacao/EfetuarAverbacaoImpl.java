@@ -1,6 +1,7 @@
 package com.spuppi.cleanarchevents.cleanarchcloudevents.core.usecases.uccadastraraverbacao;
 
 import com.spuppi.cleanarchevents.cleanarchcloudevents.application.configuration.usecaseevent.annotation.UseCase;
+import com.spuppi.cleanarchevents.cleanarchcloudevents.application.configuration.usecaseevent.annotation.UseCaseInit;
 import com.spuppi.cleanarchevents.cleanarchcloudevents.core.contracts.dataproviders.database.DatabaseClientePort;
 import com.spuppi.cleanarchevents.cleanarchcloudevents.core.contracts.usecases.ucefetuaraverbacao.EfetuarAverbacaoEventRequest;
 import com.spuppi.cleanarchevents.cleanarchcloudevents.core.contracts.usecases.ucefetuaraverbacao.EfetuarAverbacaoPort;
@@ -12,13 +13,13 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-@UseCase(name = "uccadastraraverbacao",
-        eventType = "com.spuppi.cleanarchevents.cleanarchcloudevents.core.contracts.usecases.ucefetuaraverbacao.EfetuarAverbacaoEventRequest")
+@UseCase(name = "uccadastraraverbacao")
 public class EfetuarAverbacaoImpl implements EfetuarAverbacaoPort{
 
     @Autowired
     private DatabaseClientePort clienteDb;
 
+    @UseCaseInit
     @Async
     @EventListener
     @Override

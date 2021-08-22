@@ -6,6 +6,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spuppi.cleanarchevents.cleanarchcloudevents.application.configuration.usecaseevent.annotation.UseCase;
+import com.spuppi.cleanarchevents.cleanarchcloudevents.application.configuration.usecaseevent.annotation.UseCaseInit;
 import com.spuppi.cleanarchevents.cleanarchcloudevents.application.configuration.usecaseevent.enums.EventStatus;
 import com.spuppi.cleanarchevents.cleanarchcloudevents.application.configuration.usecaseevent.enums.EventType;
 import com.spuppi.cleanarchevents.cleanarchcloudevents.application.configuration.usecaseevent.model.UseCaseEvent;
@@ -19,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UseCaseEventFunctionAdapterAws implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent>{
+
+    private static final String CORE_USECASES = "com.spuppi.cleanarchevents.cleanarchcloudevents.core.usecases";
 
     //curl https://pvid8uk8vi.execute-api.us-east-1.amazonaws.com/api/usecaseeventfunctionadapteraws -H "Content-Type: text/plain" -d "{\"cpf\": \"123123\", \"nome\": \"asdad\", \"tipoContrato\": 1, \"transactionId\": \"12311\"}"
 
@@ -44,17 +47,17 @@ public class UseCaseEventFunctionAdapterAws implements RequestHandler<APIGateway
 
         ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
         provider.addIncludeFilter(new AnnotationTypeFilter(UseCase.class));
-        String scanPath = "com.spuppi.cleanarchevents.cleanarchcloudevents.core.usecases";
+        String scanPath = CORE_USECASES;
         Object eventProcessed = null;
         try {
             for (BeanDefinition beanDef : provider.findCandidateComponents(scanPath)) {
                 Class<?> useCaseClass = Class.forName(beanDef.getBeanClassName());
                 String useCase = useCaseClass.getAnnotation(UseCase.class).name();
-                Class<?> eventType = Class.forName(Class.forName(beanDef.getBeanClassName()).getAnnotation(UseCase.class).eventType());
                 if (useCase.equalsIgnoreCase(useCaseEvent.getHeaders().get("usecase"))) {
                     Method[] methods = useCaseClass.getMethods();
                     for(Method method : methods) {
-                        if(method.getName().equalsIgnoreCase("execute")) {
+                        if(method.isAnnotationPresent(UseCaseInit.class)){
+                            Class<?> eventType = method.getParameterTypes()[0];
                             try {
                                 context.getLogger().log(String.valueOf(objectMapper.readValue(event.getBody(), eventType)));
                                 Object instanceInvoke = useCaseClass.newInstance();

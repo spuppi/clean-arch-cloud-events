@@ -2,6 +2,7 @@ package com.spuppi.cleanarchevents.cleanarchcloudevents.application.entrypoints.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spuppi.cleanarchevents.cleanarchcloudevents.application.configuration.usecaseevent.annotation.UseCase;
+import com.spuppi.cleanarchevents.cleanarchcloudevents.application.configuration.usecaseevent.annotation.UseCaseInit;
 import com.spuppi.cleanarchevents.cleanarchcloudevents.application.configuration.usecaseevent.enums.EventStatus;
 import com.spuppi.cleanarchevents.cleanarchcloudevents.application.configuration.usecaseevent.model.UseCaseEvent;
 import io.swagger.annotations.Api;
@@ -19,9 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Method;
+
 @Api(value = "Swagger2DemoRestControllerJsonEvent")
 @RestController(value = "/v1/event")
 public class UseCaseControllerRest {
+
+    private static final String CORE_USECASES = "com.spuppi.cleanarchevents.cleanarchcloudevents.core.usecases";
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
@@ -37,24 +42,33 @@ public class UseCaseControllerRest {
     })
     @RequestMapping(value = "/usecaseevent", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<UseCaseEvent> useCaseEventJson(
-            @RequestBody UseCaseEvent event) {
+            @RequestBody UseCaseEvent useCaseEvent) {
 
-        System.out.println(event.getPayload());
+        System.out.println(useCaseEvent.getPayload());
 
         ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
         provider.addIncludeFilter(new AnnotationTypeFilter(UseCase.class));
-        String scanPath = "com.spuppi.cleanarchevents.cleanarchcloudevents.core.usecases";
-        String useCase = null;
-        Class<?> eventType = null;
+        String scanPath = CORE_USECASES;
+        Object eventProcessed = null;
         try {
             for (BeanDefinition beanDef : provider.findCandidateComponents(scanPath)) {
-                useCase = Class.forName(beanDef.getBeanClassName()).getAnnotation(UseCase.class).name();
-                eventType = Class.forName(Class.forName(beanDef.getBeanClassName()).getAnnotation(UseCase.class).eventType());
-                if (useCase.equalsIgnoreCase(event.getHeaders().get("usecase"))) {
-                    eventPublisher.publishEvent(objectMapper.convertValue(event.getPayload(), eventType));
-                    event.setStatus(EventStatus.CREATED);
+                Class<?> useCaseClass = Class.forName(beanDef.getBeanClassName());
+                String useCase = useCaseClass.getAnnotation(UseCase.class).name();
+                if (useCase.equalsIgnoreCase(useCaseEvent.getHeaders().get("usecase"))) {
+                    Method[] methods = useCaseClass.getMethods();
+                    for(Method method : methods) {
+                        if(method.isAnnotationPresent(UseCaseInit.class)){
+                            Class<?> eventType = method.getParameterTypes()[0];
+                            try {
+                                eventPublisher.publishEvent(objectMapper.readValue(String.valueOf(useCaseEvent.getPayload()), eventType));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    useCaseEvent.setStatus(EventStatus.CREATED);
                 }else{
-                    event.setStatus(EventStatus.NOT_FOUND);
+                    useCaseEvent.setStatus(EventStatus.NOT_FOUND);
                 }
                 break;
             }
@@ -62,6 +76,6 @@ public class UseCaseControllerRest {
             e.printStackTrace();
         }
 
-        return ResponseEntity.ok(event);
+        return ResponseEntity.ok(useCaseEvent);
     }
 }

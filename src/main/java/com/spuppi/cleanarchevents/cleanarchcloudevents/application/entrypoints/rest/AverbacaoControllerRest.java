@@ -89,14 +89,17 @@ public class AverbacaoControllerRest {
         provider.addIncludeFilter(new AnnotationTypeFilter(UseCase.class));
         String scanPath = "com.spuppi.cleanarchevents.cleanarchcloudevents.core.usecases";
         String useCase = null;
-        Class<?> eventType = null;
 
         UseCaseEvent useCaseEvent = new UseCaseEvent();
         useCaseEvent.setPayload(jsonRequestEvent);
         
         for (BeanDefinition beanDef : provider.findCandidateComponents(scanPath)) {
             useCase = Class.forName(beanDef.getBeanClassName()).getAnnotation(UseCase.class).name();
-            eventType = Class.forName(Class.forName(beanDef.getBeanClassName()).getAnnotation(UseCase.class).eventType());
+//            eventType = Class.forName(Class.forName(beanDef.getBeanClassName()).getAnnotation(UseCase.class).eventType());
+
+
+            Class<?> eventType = Class.forName("com.spuppi.cleanarchevents.cleanarchcloudevents.core.contracts.usecases.ucefetuaraverbacao.EfetuarAverbacaoEventRequest");
+
             if (useCase.equalsIgnoreCase(usecase)) {
                 eventPublisher.publishEvent(objectMapper.readValue(jsonRequestEvent, eventType));
                 useCaseEvent.setStatus(EventStatus.CREATED);

@@ -182,7 +182,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/simple-aws-lambda/api/1629568556059-2021-08-21T17:55:56.059Z/target/clean-arch-cloud-events-0.0.1-SNAPSHOT-aws.jar"
+          "S3Key": "serverless/simple-aws-lambda/api/1629654544124-2021-08-22T17:49:04.124Z/target/clean-arch-cloud-events-0.0.1-SNAPSHOT-aws.jar"
         },
         "Handler": "com.spuppi.cleanarchevents.cleanarchcloudevents.application.entrypoints.serverless.aws.UseCaseEventFunctionAdapterAws",
         "Runtime": "java11",
@@ -200,14 +200,14 @@
         "SpringadapterawsLogGroup"
       ]
     },
-    "SpringadapterawsLambdaVersionHGGc0wEQr7tz93WtSCkYGDHtwZ6yz1IIO4dNrqlRoc": {
+    "SpringadapterawsLambdaVersionkHSpN5JfbatpIt39KsJo5Wu1lVtcaAFFNh1wcCRc": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "SpringadapterawsLambdaFunction"
         },
-        "CodeSha256": "Ond253fyQ7yf1AcsOOwUTZolW3k26zSwLUlqRJZXYzk="
+        "CodeSha256": "cfl11gmmw3wqWyfpSEkrjkfTx1ianMUUH7a1OrdwRUc="
       }
     },
     "ApiGatewayRestApi": {
@@ -283,7 +283,7 @@
         "SpringadapterawsLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1629568552661": {
+    "ApiGatewayDeployment1629654540442": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -345,7 +345,7 @@
     "SpringadapterawsLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "SpringadapterawsLambdaVersionHGGc0wEQr7tz93WtSCkYGDHtwZ6yz1IIO4dNrqlRoc"
+        "Ref": "SpringadapterawsLambdaVersionkHSpN5JfbatpIt39KsJo5Wu1lVtcaAFFNh1wcCRc"
       },
       "Export": {
         "Name": "sls-simple-aws-lambda-api-SpringadapterawsLambdaFunctionQualifiedArn"
